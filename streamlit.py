@@ -163,7 +163,7 @@ if submitted:
     
     # Display the result
     st.markdown(f'<div class="result-text">The estimated property price is **${predicted_price:,.2f}**</div>', unsafe_allow_html=True)
-    st.image("market.png", caption="Real Estate Market Trends", use_column_width=True)
+    st.image("market.png", caption="Real Estate Market Trends", use_container_width=True)
 
 # --- Feature explanation ---
 st.markdown(
