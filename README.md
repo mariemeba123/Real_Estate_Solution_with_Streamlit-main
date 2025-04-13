@@ -1,7 +1,7 @@
 # Real_Estate_Price_Prediction
 This app has been built using Streamlit and deployed with Streamlit community cloud
 
-[Visit the app here](https://realestatesolutionwithapp-main-xpeymy7qyvfbak3qdsnnjx.streamlit.app/)
+[Visit the app here](https://real-estate-price-prediction-application.streamlit.app/)
 
 password - streamlit
 

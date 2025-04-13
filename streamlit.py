@@ -6,12 +6,18 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Load the pre-trained model
-model_path = "models/LRmodel.pkl"  # Make sure you have a pre-trained model
-with open(model_path, "rb") as file:
-    model = pickle.load(file)
+try:
+    model_path = "models/LRmodel.pkl"  # Make sure you have a pre-trained model
+    with open(model_path, "rb") as file:
+        model = pickle.load(file)
+except FileNotFoundError:
+    st.error("Model file not found. Please ensure 'models/LRmodel.pkl' exists.")
+    st.stop()
+except Exception as e:
+    st.error(f"An error occurred while loading the model: {e}")
+    st.stop()
+    
 # Page Configuration
-
-
 st.set_page_config(page_title="Real Estate Price Prediction", layout="centered")
 st.markdown("""
     <style>
@@ -146,24 +152,31 @@ with st.form("property_inputs"):
 
 # Data processing and prediction
 if submitted:
-    basement_value = 1 if basement == "Yes" else 0
-    property_type_Bungalow = 1 if property_type == "Bungalow" else 0
-    property_type_Condo = 1 if property_type == "Condo" else 0
-    popular_value = 1 if popular == "Yes" else 0
-    recession_value = 1 if recession == "Yes" else 0
-    property_age = year_sold - year_built
-    
-    # Prepare model input
-    input_data = [[year_sold, property_tax, insurance, beds, baths, sqft, year_built,
-                   lot_size, basement_value, popular_value, recession_value, property_age,
-                   property_type_Bungalow, property_type_Condo]]
-    
-    # Predict the price
-    predicted_price = model.predict(input_data)[0]
-    
-    # Display the result
-    st.markdown(f'<div class="result-text">The estimated property price is **${predicted_price:,.2f}**</div>', unsafe_allow_html=True)
-    st.image("market.png", caption="Real Estate Market Trends")
+    try:
+        basement_value = 1 if basement == "Yes" else 0
+        property_type_Bungalow = 1 if property_type == "Bungalow" else 0
+        property_type_Condo = 1 if property_type == "Condo" else 0
+        popular_value = 1 if popular == "Yes" else 0
+        recession_value = 1 if recession == "Yes" else 0
+        property_age = year_sold - year_built
+        
+        # Prepare model input
+        input_data = [[year_sold, property_tax, insurance, beds, baths, sqft, year_built,
+                    lot_size, basement_value, popular_value, recession_value, property_age,
+                    property_type_Bungalow, property_type_Condo]]
+        
+        # Predict the price
+        predicted_price = model.predict(input_data)[0]
+        
+        # Display the result
+        st.markdown(f'<div class="result-text">The estimated property price is **${predicted_price:,.2f}**</div>', unsafe_allow_html=True)
+        try:
+            st.image("market.png", caption="Real Estate Market Trends")
+        except FileNotFoundError:
+            st.warning("Feature importance image not found.")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
+
 
 # --- Feature explanation ---
 st.markdown(
